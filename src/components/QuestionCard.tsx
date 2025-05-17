@@ -3,7 +3,13 @@ import React, { useState } from 'react';
 import { Question, Theme } from '../data/gameData';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from '@/components/ui/dialog';
 
 interface QuestionCardProps {
   question: Question;
@@ -38,10 +44,15 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     // Show dialog with fact after a short delay
     setTimeout(() => {
       setIsDialogOpen(true);
-      
-      // Tell parent component about the answer
-      onAnswer(isTrue);
     }, 1200);
+  };
+
+  const handleContinue = () => {
+    setIsDialogOpen(false);
+    // Tell parent component about the answer after dialog is closed
+    // This fixes the problem where clicking continue doesn't move to the next question
+    const isCorrect = selectedAnswer === 'true';
+    onAnswer(isCorrect);
   };
 
   const getButtonClass = (statement: { isTrue: boolean }) => {
@@ -67,14 +78,15 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       
       <Card className="p-6 mb-8 shadow-lg">
         <h2 className="text-xl font-bold mb-6 text-center">Which statement is TRUE?</h2>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
           {statements.map((statement, index) => (
             <Button
               key={index}
               onClick={() => !showResult && handleSelection(statement.isTrue)}
               className={`${getButtonClass(statement)} p-6 h-auto text-lg font-normal text-left transition-colors ${
                 showResult && statement.isTrue ? 'pulse' : ''
-              } ${showResult && selectedAnswer === 'false' && !statement.isTrue ? 'shake' : ''}`}
+              } ${showResult && selectedAnswer === 'false' && !statement.isTrue ? 'shake' : ''} 
+              flex-1 break-words`}
               disabled={showResult}
             >
               {statement.text}
@@ -84,27 +96,41 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent style={gradientStyle} className="text-white border-none">
+        <DialogContent style={gradientStyle} className="text-white border-none max-w-md">
+          <DialogTitle className="text-xl font-bold text-white">
+            {selectedAnswer === 'true' ? 'Correct! ✅' : 'Incorrect ❌'}
+          </DialogTitle>
+          <DialogDescription className="text-white/80">
+            {selectedAnswer === 'true' 
+              ? 'Well done! You picked the true statement.' 
+              : 'Oops! That statement was false.'}
+          </DialogDescription>
           <div className="text-center py-4">
-            <div className="text-4xl mb-4">{selectedAnswer === 'true' ? '✅' : '❌'}</div>
-            <h3 className="text-xl font-bold mb-4">
-              {selectedAnswer === 'true' 
-                ? 'Correct! You got it right.' 
-                : 'Oops! That was incorrect.'}
-            </h3>
             <div className="bg-white/20 p-4 rounded-lg mb-4">
               <h4 className="text-lg font-semibold mb-2">Fun Fact</h4>
               <p>{question.fact}</p>
             </div>
-            <Button 
-              onClick={() => setIsDialogOpen(false)}
-              className="bg-white text-black hover:bg-gray-100"
-            >
-              Continue
-            </Button>
+            <DialogFooter>
+              <Button 
+                onClick={handleContinue}
+                className="bg-white text-black hover:bg-gray-100 w-full"
+              >
+                Continue
+              </Button>
+            </DialogFooter>
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Progress indicator */}
+      <div className="mt-8 flex justify-center">
+        <div className="w-full max-w-xs h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-green-500" 
+            style={{ width: `${(questionNumber / 5) * 100}%`, transition: 'width 0.5s ease-in-out' }}
+          />
+        </div>
+      </div>
     </div>
   );
 };

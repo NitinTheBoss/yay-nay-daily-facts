@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { getGameDataForDate, GameData, Question } from '../data/gameData';
+import { getGameDataForDate, GameData } from '../data/gameData';
 import StartScreen from './StartScreen';
 import QuestionCard from './QuestionCard';
 import ResultScreen from './ResultScreen';
@@ -29,13 +29,11 @@ const GameContainer: React.FC = () => {
     }
     
     // Move to next question or show results
-    setTimeout(() => {
-      if (currentQuestionIndex < gameData.questions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-      } else {
-        setGameState(GameState.RESULTS);
-      }
-    }, 500);
+    if (currentQuestionIndex < gameData.questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      setGameState(GameState.RESULTS);
+    }
   };
 
   const handleRestartGame = () => {
