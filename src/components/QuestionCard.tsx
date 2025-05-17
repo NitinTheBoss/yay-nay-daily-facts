@@ -49,8 +49,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
   const handleContinue = () => {
     setIsDialogOpen(false);
-    // Tell parent component about the answer after dialog is closed
-    // This fixes the problem where clicking continue doesn't move to the next question
+    // This is the key fix: Move to the next question when the dialog is closed
     const isCorrect = selectedAnswer === 'true';
     onAnswer(isCorrect);
   };
@@ -78,7 +77,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       
       <Card className="p-6 mb-8 shadow-lg">
         <h2 className="text-xl font-bold mb-6 text-center">Which statement is TRUE?</h2>
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col gap-4">
           {statements.map((statement, index) => (
             <Button
               key={index}
