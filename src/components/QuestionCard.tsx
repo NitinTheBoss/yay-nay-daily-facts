@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Question, Theme } from '../data/gameData';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -27,17 +27,26 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [statements, setStatements] = useState<Array<{ text: string, isTrue: boolean }>>([]);
 
   console.log('QuestionCard rendered with question number:', questionNumber);
 
-  // Randomize the order of statements
-  const [statements] = useState(() => {
+  // Reset state and randomize statements when question changes
+  useEffect(() => {
+    console.log('Question changed, resetting QuestionCard state for question:', questionNumber);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setIsDialogOpen(false);
+    
+    // Randomize the order of statements
     const statementsArray = [
       { text: question.true, isTrue: true },
       { text: question.false, isTrue: false }
     ];
-    return statementsArray.sort(() => Math.random() - 0.5);
-  });
+    const randomizedStatements = [...statementsArray].sort(() => Math.random() - 0.5);
+    console.log('New statements randomized for question:', questionNumber);
+    setStatements(randomizedStatements);
+  }, [question, questionNumber]);
 
   const handleSelection = (isTrue: boolean) => {
     console.log('User selected answer, isTrue:', isTrue);
@@ -55,7 +64,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     console.log('Continue button clicked, closing dialog');
     setIsDialogOpen(false);
     
-    // This is the key fix: Move to the next question when the dialog is closed
+    // Move to the next question when the dialog is closed
     const isCorrect = selectedAnswer === 'true';
     console.log('About to call onAnswer with isCorrect:', isCorrect);
     onAnswer(isCorrect);
