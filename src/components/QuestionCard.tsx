@@ -99,13 +99,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             <Button
               key={index}
               onClick={() => !showResult && handleSelection(statement.isTrue)}
-              className={`${getButtonClass(statement)} p-6 h-auto text-lg font-normal text-left transition-colors ${
+              className={`${getButtonClass(statement)} p-4 h-auto min-h-16 text-lg font-normal text-left transition-colors ${
                 showResult && statement.isTrue ? 'pulse' : ''
               } ${showResult && selectedAnswer === 'false' && !statement.isTrue ? 'shake' : ''} 
-              flex-1 break-words`}
+              flex-1 whitespace-normal break-words`}
               disabled={showResult}
             >
-              {statement.text}
+              <span className="line-clamp-none">{statement.text}</span>
             </Button>
           ))}
         </div>

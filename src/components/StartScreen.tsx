@@ -15,13 +15,13 @@ const StartScreen: React.FC<StartScreenProps> = ({ theme, onStart }) => {
 
   return (
     <div 
-      className="min-h-[500px] flex flex-col items-center justify-center p-6 rounded-lg shadow-lg fade-in"
+      className="min-h-[500px] flex flex-col items-center justify-center p-6 rounded-lg shadow-lg fade-in text-white"
       style={gradientStyle}
     >
       <div className="text-6xl mb-4 bounce-in">{theme.emoji}</div>
-      <h1 className="text-4xl font-bold mb-2 text-white text-center">Yay or Nay?</h1>
-      <h2 className="text-2xl mb-8 text-white opacity-90 text-center">Today's Theme: {theme.name}</h2>
-      <p className="text-white text-center mb-8 max-w-md">
+      <h1 className="text-4xl font-bold mb-2 text-center">Yay or Nay?</h1>
+      <h2 className="text-2xl mb-8 opacity-90 text-center">Today's Theme: {theme.name}</h2>
+      <p className="text-center mb-8 max-w-md">
         Can you pick the true statement in each round? Test your knowledge with today's 5 questions!
       </p>
       <Button 

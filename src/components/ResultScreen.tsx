@@ -3,7 +3,7 @@ import React from 'react';
 import { Theme, getRankTitle } from '../data/gameData';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { ArrowRight } from 'lucide-react';
+import { Share2, MessageSquare } from 'lucide-react';
 
 interface ResultScreenProps {
   score: number;
@@ -24,9 +24,9 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
     background: `linear-gradient(135deg, ${theme.colors[0]}, ${theme.colors[1]})`,
   };
 
+  const shareText = `I got ${score}/${totalQuestions} in today's Yay or Nay? (Theme: ${theme.name} ${theme.emoji}).\nCan you beat me? Play here: [game link]`;
+
   const handleShare = () => {
-    const shareText = `I got ${score}/${totalQuestions} in today's Yay or Nay? (Theme: ${theme.name} ${theme.emoji}).\nCan you beat me? Play here: [game link]`;
-    
     // Try to use the Web Share API if available
     if (navigator.share) {
       navigator.share({
@@ -43,8 +43,6 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
   };
 
   const copyToClipboard = () => {
-    const shareText = `I got ${score}/${totalQuestions} in today's Yay or Nay? (Theme: ${theme.name} ${theme.emoji}).\nCan you beat me? Play here: [game link]`;
-    
     navigator.clipboard.writeText(shareText)
       .then(() => {
         toast.success("Result copied to clipboard!");
@@ -52,6 +50,12 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
       .catch(() => {
         toast.error("Couldn't copy to clipboard");
       });
+  };
+
+  const handleWhatsAppShare = () => {
+    // WhatsApp sharing URL
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -74,7 +78,14 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
           onClick={handleShare} 
           className="bg-white text-black hover:bg-gray-100 p-6 h-auto font-semibold"
         >
-          Share Results <ArrowRight className="ml-2 h-4 w-4" />
+          <Share2 className="mr-2" /> Share Results
+        </Button>
+        
+        <Button 
+          onClick={handleWhatsAppShare}
+          className="bg-green-500 text-white hover:bg-green-600 p-6 h-auto font-semibold"
+        >
+          <MessageSquare className="mr-2" /> Share on WhatsApp
         </Button>
         
         <Button 
