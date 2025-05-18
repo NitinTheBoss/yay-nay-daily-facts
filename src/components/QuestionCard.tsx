@@ -28,6 +28,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   const [showResult, setShowResult] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  console.log('QuestionCard rendered with question number:', questionNumber);
+
   // Randomize the order of statements
   const [statements] = useState(() => {
     const statementsArray = [
@@ -38,20 +40,26 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   });
 
   const handleSelection = (isTrue: boolean) => {
+    console.log('User selected answer, isTrue:', isTrue);
     setSelectedAnswer(isTrue ? 'true' : 'false');
     setShowResult(true);
     
     // Show dialog with fact after a short delay
     setTimeout(() => {
+      console.log('Opening dialog after selection');
       setIsDialogOpen(true);
     }, 1200);
   };
 
   const handleContinue = () => {
+    console.log('Continue button clicked, closing dialog');
     setIsDialogOpen(false);
+    
     // This is the key fix: Move to the next question when the dialog is closed
     const isCorrect = selectedAnswer === 'true';
+    console.log('About to call onAnswer with isCorrect:', isCorrect);
     onAnswer(isCorrect);
+    console.log('Called onAnswer, selectedAnswer was:', selectedAnswer);
   };
 
   const getButtonClass = (statement: { isTrue: boolean }) => {
